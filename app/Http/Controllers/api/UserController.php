@@ -65,6 +65,6 @@ class UserController extends Controller
 
     public function test()
     {
-        return 'ok';
+        return response()->json(['message' => 'thats a bad request'], 400);
     }
 }
