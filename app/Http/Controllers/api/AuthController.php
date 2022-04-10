@@ -11,12 +11,22 @@ use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
 
+    protected $custom_validator = [
+        'email.required' => 'Un email est requis.',
+        'email.email' => 'L\'email n\'est pas valide.',
+        'email.unique' => 'Cet email est déjà utilisé.',
+        'email.max' => 'L\'email ne doit pas dépasser 100 caractères.',
+        'password.required' => 'Un mot de passe est requis.',
+        'password.confirmed' => 'Les 2 mot de passes sont différents.',
+        'password.regex' => 'Le mot de passe doit faire 8 caractères avec au moins une majuscule et un chiffre.'
+    ];
+
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|min:6'
-        ]);
+            'email' => 'required|email|max:100|unique:users',
+            'password' => 'required|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}/'
+        ], $this->custom_validator);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
@@ -37,8 +47,8 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
-            'password' => 'required|string'
-        ]);
+            'password' => 'required'
+        ], $this->custom_validator);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
