@@ -15,6 +15,7 @@ class ProjectController extends Controller
         'name.max' => 'Le nom ne doit pas dépasser 50 caractères',
         '*.name.required' => 'Un nom de label est requis',
         '*.color.required' => 'Une couleur de label est requise',
+        'token.required' => 'Un code est requis'
     ];
 
     /**
@@ -85,6 +86,38 @@ class ProjectController extends Controller
 
         return strtoupper($token);
     }
+
+    public function join(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'token' => 'required|string',
+        ], $this->custom_validator);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        $project = Project::where('token', $validator->validated()['token'])->first();
+
+        if ($project) {
+            if ($project->users->contains(auth()->user()->id)) {
+                return response()->json([
+                    'error' => 'Vous êtes déjà dans ce projet'
+                ], 400);
+            } else {
+                $project->users()->attach(auth()->user()->id);
+                return response()->json([
+                    'message' => 'You joined the project',
+                    'project' => $project
+                ], 201);
+            }
+        } else {
+            return response()->json([
+                'error' => 'Projet introuvable'
+            ], 400);
+        }
+    }
+
     /**
      * Display the specified resource.
      *
@@ -93,7 +126,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        //
+        return $project;
     }
 
     /**
