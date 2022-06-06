@@ -47,7 +47,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
+            'email' => 'required',
             'password' => 'required'
         ], $this->custom_validator);
 
@@ -82,7 +82,7 @@ class AuthController extends Controller
             'access_token' => $token,
             'user' => $user,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => auth()->factory()->getTTL() * 60 * 24
         ]);
     }
 }

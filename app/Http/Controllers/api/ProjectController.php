@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -25,7 +26,8 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        //
+        Log::info(auth()->user()->projects);
+        return auth()->user()->projects;
     }
 
     /**
@@ -67,7 +69,7 @@ class ProjectController extends Controller
             if ($validator->fails()) {
                 return response()->json($validator->errors(), 400);
             }
-            
+
             $project->labels()->createMany($validator->validated());
         }
 
@@ -77,7 +79,7 @@ class ProjectController extends Controller
         ], 201);
     }
 
-    public function generateToken() 
+    public function generateToken()
     {
         $token = "";
         do {

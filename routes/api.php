@@ -27,3 +27,4 @@ Route::post('/refresh', [AuthController::class, 'refresh']);
 
 Route::post('/projects', [ProjectController::class, 'store'])->middleware('jwt.auth');
 Route::post('/projects/join', [ProjectController::class, 'join'])->middleware('jwt.auth');
+Route::get('/projects', [ProjectController::class, 'index'])->middleware('jwt.auth');
