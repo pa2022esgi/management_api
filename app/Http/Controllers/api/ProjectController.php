@@ -5,7 +5,6 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -26,8 +25,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        Log::info(auth()->user()->projects);
-        return auth()->user()->projects;
+        return auth()->user()->projects->load('users', 'labels');
     }
 
     /**
@@ -59,8 +57,6 @@ class ProjectController extends Controller
         $project->users()->attach(auth()->user()->id);
 
         if ($request->has('labels')) {
-            $project->labels()->delete();
-
             $validator = Validator::make($request->all()['labels'], [
                 '*.name' => 'required|string',
                 '*.color' => 'required|string',
