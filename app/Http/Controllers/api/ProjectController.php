@@ -4,7 +4,9 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
+use App\Models\UserProject;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -136,7 +138,60 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:50',
+            'description' => 'string|nullable',
+            'labels' => 'array|nullable',
+            'members' => 'array|nullable'
+        ], $this->custom_validator);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        $project->update($validator->validated());
+
+        if ($request->has('labels')) {
+            $validator = Validator::make($request->all()['labels'], [
+                '*.id' => 'nullable|integer',
+                '*.name' => 'required|string',
+                '*.color' => 'required|string',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 400);
+            }
+
+            $project->labels()->whereNotIn('id', array_column($validator->validated(), 'id'))->delete();
+            
+            foreach ($validator->validated() as $label) {
+                if (array_key_exists('id', $label)) {
+                    $project->labels()->find($label['id'])->update($label);
+                } else {
+                    $project->labels()->create($label);
+                }
+            }
+        }
+
+        if ($request->has('members')) {
+            $validator = Validator::make($request->all()['members'], [
+                '*.id' => 'required|integer',
+                '*.banished' => 'required|string',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 400);
+            }
+
+            foreach ($validator->validated() as $member) {
+                UserProject::where([['project_id', $project->id], ['user_id', $member['id']]])->update(['banished' => filter_var($member['banished'], FILTER_VALIDATE_BOOLEAN)]);
+            }
+        }
+
+        return response()->json([
+            'message' => 'Project successfully updated',
+            'project' => $project
+        ], 200);
     }
 
     /**
