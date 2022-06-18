@@ -16,14 +16,17 @@ class CreateTableCards extends Migration
         Schema::create('cards', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('description');
+            $table->text('description')->nullable();
+            $table->date('due_date');
 
             $table->foreignId('status_id');
             $table->foreign('status_id')->references('id')->on('statuses');
 
-            $table->foreignId('user_id');
+            $table->foreignId('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
 
+            $table->foreignId('project_id');
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->timestamps();
         });
     }

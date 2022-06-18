@@ -18,4 +18,9 @@ class Project extends Model
     {
         return $this->belongsToMany(User::class, UserProject::class, 'project_id', 'user_id')->withPivot('banished');;
     }
+
+    public function cards()
+    {
+        return $this->hasMany(Card::class);
+    }
 }

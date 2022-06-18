@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\UserProject;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -27,7 +26,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        return auth()->user()->projects->load('users', 'labels');
+        return auth()->user()->projects->load('users', 'labels', 'cards.user', 'cards.labels');
     }
 
     /**

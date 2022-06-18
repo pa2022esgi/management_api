@@ -3,6 +3,7 @@
 // use Illuminate\Http\Request;
 
 use App\Http\Controllers\api\AuthController;
+use App\Http\Controllers\api\CardController;
 use App\Http\Controllers\api\ProjectController;
 use App\Http\Controllers\api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -29,3 +30,6 @@ Route::post('/projects', [ProjectController::class, 'store'])->middleware('jwt.a
 Route::post('/projects/join', [ProjectController::class, 'join'])->middleware('jwt.auth');
 Route::get('/projects', [ProjectController::class, 'index'])->middleware('jwt.auth');
 Route::put('/projects/{project}', [ProjectController::class, 'update'])->middleware('jwt.auth');
+
+Route::get('/cards/statuses', [CardController::class, 'getStatuses']);
+Route::post('/projects/{project}/cards', [CardController::class, 'store'])->middleware('jwt.auth');
