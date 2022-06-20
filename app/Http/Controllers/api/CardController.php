@@ -84,9 +84,31 @@ class CardController extends Controller
      * @param  \App\Models\Card  $card
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Card $card)
+    public function update(Request $request, Project $project, Card $card)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:50',
+            'description' => 'string|nullable',
+            'labels' => 'array|nullable',
+            'status_id' => 'required|integer',
+            'user_id' => 'nullable|integer',
+            'due_date' => 'date|required',
+        ], $this->custom_validator);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        $card->update($validator->validated());
+        
+        if ($request->has('labels')) {
+            $card->labels()->sync($request->labels);
+        }
+
+        return response()->json([
+            'message' => 'Task successfully updated',
+            'task' => $card
+        ], 201);
     }
 
     /**

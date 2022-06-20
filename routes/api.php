@@ -33,3 +33,4 @@ Route::put('/projects/{project}', [ProjectController::class, 'update'])->middlew
 
 Route::get('/cards/statuses', [CardController::class, 'getStatuses']);
 Route::post('/projects/{project}/cards', [CardController::class, 'store'])->middleware('jwt.auth');
+Route::put('/projects/{project}/cards/{card}', [CardController::class, 'update'])->middleware('jwt.auth');
