@@ -119,7 +119,7 @@ class CardController extends Controller
      */
     public function destroy(Card $card)
     {
-        //
+        $card->delete();
     }
 
     public function getStatuses()
