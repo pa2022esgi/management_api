@@ -100,6 +100,12 @@ class ProjectController extends Controller
 
         if ($project) {
             if ($project->users->contains(auth()->user()->id)) {
+                if (!auth()->user()->projects->contains($project->id)) {
+                    return response()->json([
+                        'error' => 'Vous êtes banni de ce project'
+                    ], 400);
+                }
+
                 return response()->json([
                     'error' => 'Vous êtes déjà dans ce projet'
                 ], 400);
