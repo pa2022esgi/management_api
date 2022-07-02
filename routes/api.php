@@ -30,7 +30,10 @@ Route::post('/projects', [ProjectController::class, 'store'])->middleware('jwt.a
 Route::post('/projects/join', [ProjectController::class, 'join'])->middleware('jwt.auth');
 Route::get('/projects', [ProjectController::class, 'index'])->middleware('jwt.auth');
 Route::put('/projects/{project}', [ProjectController::class, 'update'])->middleware('jwt.auth');
+Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->middleware('jwt.auth');
 
 Route::get('/cards/statuses', [CardController::class, 'getStatuses']);
+
 Route::post('/projects/{project}/cards', [CardController::class, 'store'])->middleware('jwt.auth');
 Route::put('/projects/{project}/cards/{card}', [CardController::class, 'update'])->middleware('jwt.auth');
+Route::delete('/projects/{project}/cards/{card}', [CardController::class, 'destroy'])->middleware('jwt.auth');

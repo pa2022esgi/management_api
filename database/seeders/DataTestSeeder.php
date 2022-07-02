@@ -59,7 +59,7 @@ class DataTestSeeder extends Seeder
 
         $card = Card::create([
             "title" => "Test card 1",
-            "description" => "Test card description",
+            "description" => "lorem ipsum dolor sit amet",
             "due_date" => "2020-01-01",
             "user_id" => $user1->id,
             "project_id" => $project->id,
@@ -70,7 +70,7 @@ class DataTestSeeder extends Seeder
 
         $card2 = Card::create([
             "title" => "Test card 2",
-            "description" => "Test card description",
+            "description" => "lorem ipsum dolor sit amet 2",
             "due_date" => "2020-05-01",
             "user_id" => $user2->id,
             "project_id" => $project->id,
@@ -82,7 +82,7 @@ class DataTestSeeder extends Seeder
 
         $card3 = Card::create([
             "title" => "Test card 3",
-            "description" => "Test card description",
+            "description" => "lorem ipsum dolor sit amet 3",
             "due_date" => "2020-08-01",
             "user_id" => $user3->id,
             "project_id" => $project->id,
@@ -90,5 +90,16 @@ class DataTestSeeder extends Seeder
         ]);
 
         $card3->labels()->attach(1);
+
+        $project2 = Project::create([
+            'name' => 'Test project 2',
+            'description' => 'Test project description 2',
+            'token' => 'TESTTIK',
+            'created_by' => $user2->id,
+        ]);
+
+        $project2->users()->attach($user1->id, ['banished' => true]);
+        $project2->users()->attach($user2->id, ['banished' => false]);
+        $project2->users()->attach($user3->id, ['banished' => false]);
     }
 }

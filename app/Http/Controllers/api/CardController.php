@@ -117,9 +117,13 @@ class CardController extends Controller
      * @param  \App\Models\Card  $card
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Card $card)
+    public function destroy(Project $project, Card $card)
     {
         $card->delete();
+
+        return response()->json([
+            'message' => 'Task successfully deleted'
+        ], 200);
     }
 
     public function getStatuses()
