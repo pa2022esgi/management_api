@@ -20,5 +20,6 @@ Lancement :
 Utils :
 
 -   lancer les migrations : `php artisan migrate:fresh`
+-   lancer les données de test : `php artisan db:seed`
 -   charset bdd recommandé : utf8mb4_general_ci
 -   suppression du cache : `composer dump-autoload`
